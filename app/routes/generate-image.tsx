@@ -72,11 +72,12 @@ const GenerateImage: FC = () => {
   const { models, config } = useLoaderData<typeof loader>();
   const [prompt, setPrompt] = useState("");
   const [enhance, setEnhance] = useState(false);
-  const [model, setModel] = useState(config.CUSTOMER_MODEL_MAP["FLUX.1-Schnell-CF"]);
+  const [model, setModel] = useState("FLUX.1-Schnell-CF");
   const [size, setSize] = useState("1024x1024");
   const [numSteps, setNumSteps] = useState(config.FLUX_NUM_STEPS);
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const isSubmitting = navigation.state === "submitting";
 
@@ -87,7 +88,7 @@ const GenerateImage: FC = () => {
   const handleReset = () => {
     setPrompt("");
     setEnhance(false);
-    setModel(config.CUSTOMER_MODEL_MAP["FLUX.1-Schnell-CF"]);
+    setModel("FLUX.1-Schnell-CF");
     setSize("1024x1024");
     setNumSteps(config.FLUX_NUM_STEPS);
   };
@@ -125,8 +126,10 @@ const GenerateImage: FC = () => {
                   id="prompt"
                   name="prompt"
                   value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 transition duration-300 ease-in-out hover:bg-opacity-30 min-h-[120px] resize-y"
+                  onChange={handlePromptChange}
+                  ref={textareaRef}
+                  rows={6}
+                  className="w-full px-4 py-3 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 transition duration-300 ease-in-out hover:bg-opacity-30 resize-none"
                   placeholder="请输入您的提示词..."
                   required
                 />
@@ -194,7 +197,7 @@ const GenerateImage: FC = () => {
                 <button
                   type="button"
                   onClick={handleEnhanceToggle}
-                  className={`flex-1 px-4 py-3 rounded-xl text-lg font-medium text-white transition focus:outline-none
+                  className={`flex-1 px-4 py-3 rounded-xl text-lg font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-400
                             ${enhance ? "bg-blue-500" : "bg-gray-500"}`}
                   disabled={isSubmitting}
                 >
@@ -205,7 +208,7 @@ const GenerateImage: FC = () => {
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="flex-1 px-4 py-3 rounded-xl text-lg font-medium text-white bg-orange-500 transition focus:outline-none focus:ring-2 focus:ring-orange-300"
+                  className="flex-1 px-4 py-3 rounded-xl text-lg font-semibold text-white bg-amber-500 transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-amber-400"
                   disabled={isSubmitting}
                 >
                   重置
@@ -213,8 +216,8 @@ const GenerateImage: FC = () => {
                 
                 <button
                   type="submit"
-                  className={`flex-1 px-4 py-3 rounded-xl text-lg font-medium text-white transition focus:outline-none focus:ring-2 focus:ring-blue-300
-                            ${isSubmitting ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
+                  className={`flex-1 px-4 py-3 rounded-xl text-lg font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-green-400
+                            ${isSubmitting ? "bg-gray-500 cursor-not-allowed" : "bg-green-500"}`}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "生成中..." : "生成图片"}
