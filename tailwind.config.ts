@@ -8,6 +8,7 @@ export default {
         sans: [
           'PingFang SC',
           'PingFang TC',
+          'PingFang HK',
           '-apple-system',
           'BlinkMacSystemFont',
           '"SF Pro Text"',
