@@ -12,7 +12,7 @@ export class ImageGenerationService {
     let imageBase64;
     try {
       imageBase64 = isFluxModel ? 
-        await this.generateFluxImage(model, translatedPrompt, numSteps) :
+        await this.generateFluxImage(model, translatedPrompt, size, numSteps) :
         await this.generateStandardImage(model, translatedPrompt, size, numSteps);
     } catch (error) {
       console.error("Error in image generation:", error);
@@ -63,22 +63,15 @@ export class ImageGenerationService {
     }
   }
 
-  private async generateFluxImage(model: string, prompt: string, numSteps: number): Promise<string> {
-    const jsonBody = { prompt, num_steps: numSteps };
+  private async generateFluxImage(model: string, prompt: string, size: string, numSteps: number): Promise<string> {
+    const [width, height] = size.split('x').map(Number);
+    const jsonBody = { prompt, num_steps: numSteps, width, height };
     const response = await this.postRequest(model, jsonBody);
     const jsonResponse = await response.json();
     if (!jsonResponse.result || !jsonResponse.result.image) {
       throw new AppError('Invalid response from Flux model', 500);
     }
     return jsonResponse.result.image;
-  }
-
-  private async generateStandardImage(model: string, prompt: string, size: string, numSteps: number): Promise<string> {
-    const [width, height] = size.split('x').map(Number);
-    const jsonBody = { prompt, num_steps: numSteps, guidance: 7.5, strength: 1, width, height };
-    const response = await this.postRequest(model, jsonBody);
-    const imageBuffer = await response.arrayBuffer();
-    return this.arrayBufferToBase64(imageBuffer);
   }
 
   private async postRequest(model: string, jsonBody: any): Promise<Response> {
@@ -124,4 +117,12 @@ export class ImageGenerationService {
     await this.postRequest(testModel, { messages: [{ role: "user", content: testPrompt }] });
   }
 }
+
+private async generateStandardImage(model: string, prompt: string, size: string, numSteps: number): Promise<string> {
+    const [width, height] = size.split('x').map(Number);
+    const jsonBody = { prompt, num_steps: numSteps, guidance: 7.5, strength: 1, width, height };
+    const response = await this.postRequest(model, jsonBody);
+    const imageBuffer = await response.arrayBuffer();
+    return this.arrayBufferToBase64(imageBuffer);
+  }
 }
