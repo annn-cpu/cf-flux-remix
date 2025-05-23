@@ -106,6 +106,10 @@ const GenerateImage: FC = () => {
     setModel(e.target.value);
   };
 
+  const handleSizeChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSize(e.target.value);
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 px-4 py-8">
       <div className="relative bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-3xl shadow-2xl p-8 max-w-4xl w-full">
@@ -160,7 +164,7 @@ const GenerateImage: FC = () => {
                     id="size"
                     name="size"
                     value={size}
-                    onChange={(e) => setSize(e.target.value)}
+                    onChange={handleSizeChange}
                     className="w-full px-4 py-2 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white bg-opacity-20 text-white transition duration-300 ease-in-out hover:bg-opacity-30"
                   >
                     <option value="1024x1024">1:1 (1024x1024)</option>
