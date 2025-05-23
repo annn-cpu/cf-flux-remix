@@ -12,7 +12,7 @@ export class ImageGenerationService {
     let imageBase64;
     try {
       imageBase64 = isFluxModel ? 
-        await this.generateFluxImage(model, translatedPrompt, size, numSteps) :
+        await this.generateFluxImage(model, translatedPrompt, numSteps) :
         await this.generateStandardImage(model, translatedPrompt, size, numSteps);
     } catch (error) {
       console.error("Error in image generation:", error);
@@ -63,9 +63,8 @@ export class ImageGenerationService {
     }
   }
 
-  private async generateFluxImage(model: string, prompt: string, size: string, numSteps: number): Promise<string> {
-    const [width, height] = size.split('x').map(Number);
-    const jsonBody = { prompt, num_steps: numSteps, width, height };
+  private async generateFluxImage(model: string, prompt: string, numSteps: number): Promise<string> {
+    const jsonBody = { prompt, num_steps: numSteps };
     const response = await this.postRequest(model, jsonBody);
     const jsonResponse = await response.json();
     if (!jsonResponse.result || !jsonResponse.result.image) {
