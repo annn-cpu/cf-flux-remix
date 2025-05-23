@@ -92,7 +92,7 @@ const GenerateImage: FC = () => {
     setNumSteps(config.FLUX_NUM_STEPS);
   };
 
-  const handlePromptChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handlePromptChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(e.target.value);
   };
 
@@ -121,13 +121,12 @@ const GenerateImage: FC = () => {
                 <label htmlFor="prompt" className="block text-white text-lg font-semibold mb-2">
                   输入提示词：
                 </label>
-                <input
-                  type="text"
+                <textarea
                   id="prompt"
                   name="prompt"
                   value={prompt}
                   onChange={handlePromptChange}
-                  className="w-full px-4 py-3 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 transition duration-300 ease-in-out hover:bg-opacity-30"
+                  className="w-full px-4 py-3 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 transition duration-300 ease-in-out hover:bg-opacity-30 min-h-[120px] resize-y"
                   placeholder="请输入您的提示词..."
                   required
                 />
@@ -164,9 +163,12 @@ const GenerateImage: FC = () => {
                     onChange={(e) => setSize(e.target.value)}
                     className="w-full px-4 py-2 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white bg-opacity-20 text-white transition duration-300 ease-in-out hover:bg-opacity-30"
                   >
-                    <option value="512x512">512x512</option>
-                    <option value="768x768">768x768</option>
-                    <option value="1024x1024">1024x1024</option>
+                    <option value="1024x1024">1:1 (1024x1024)</option>
+                    <option value="512x1024">1:2 (512x1024)</option>
+                    <option value="768x512">3:2 (768x512)</option>
+                    <option value="768x1024">3:4 (768x1024)</option>
+                    <option value="1024x576">16:9 (1024x576)</option>
+                    <option value="576x1024">9:16 (576x1024)</option>
                   </select>
                 </div>
               </div>
@@ -193,7 +195,7 @@ const GenerateImage: FC = () => {
                   type="button"
                   onClick={handleEnhanceToggle}
                   className={`flex-1 px-4 py-3 rounded-xl text-lg font-semibold text-white transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400
-                            ${enhance ? "bg-gradient-to-r from-green-400 to-green-600" : "bg-gradient-to-r from-gray-400 to-gray-600"}`}
+                            ${enhance ? "bg-green-500" : "bg-gray-500"}`}
                   disabled={isSubmitting}
                 >
                   {enhance ? "已强化提示词" : "强化提示词"}
@@ -203,7 +205,7 @@ const GenerateImage: FC = () => {
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="flex-1 px-4 py-3 rounded-xl text-lg font-semibold text-white bg-gradient-to-r from-yellow-400 to-yellow-600 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  className="flex-1 px-4 py-3 rounded-xl text-lg font-semibold text-white bg-yellow-500 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                   disabled={isSubmitting}
                 >
                   重置
@@ -212,7 +214,7 @@ const GenerateImage: FC = () => {
                 <button
                   type="submit"
                   className={`flex-1 px-4 py-3 rounded-xl text-lg font-semibold text-white transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-400
-                            ${isSubmitting ? "bg-gray-500 cursor-not-allowed" : "bg-gradient-to-r from-indigo-500 to-indigo-700"}`}
+                            ${isSubmitting ? "bg-gray-500 cursor-not-allowed" : "bg-indigo-500"}`}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "生成中..." : "生成图片"}
@@ -268,8 +270,8 @@ const GenerateImage: FC = () => {
         </div>
         
         {/* 装饰元素 */}
-        <div className="absolute top-0 left-0 w-32 h-32 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000 -z-10"></div>
-        <div className="absolute bottom-0 right-0 w-32 h-32 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000 -z-10"></div>
+        <div className="absolute top-0 left-0 w-32 h-32 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"></div>
+        <div className="absolute bottom-0 right-0 w-32 h-32 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"></div>
       </div>
     </div>
   );
