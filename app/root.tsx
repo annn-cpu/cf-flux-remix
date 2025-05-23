@@ -1,4 +1,4 @@
-import type { LinksFunction } from "@remix-run/cloudflare";
+import type { LinksFunction, MetaFunction } from "@remix-run/cloudflare";
 import {
   Links,
   Meta,
@@ -9,13 +9,20 @@ import {
 
 import "./tailwind.css";
 
+export const meta: MetaFunction = () => {
+  return [
+    { title: "CF Flux Remix - AI 图像生成" },
+    { name: "description", content: "使用 Cloudflare AI 生成精美图片" },
+  ];
+};
+
 export const links: LinksFunction = () => [
   // 移除 Google Fonts 相关链接
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="zh-CN">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
