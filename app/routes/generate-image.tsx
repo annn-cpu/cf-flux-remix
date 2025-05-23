@@ -72,12 +72,11 @@ const GenerateImage: FC = () => {
   const { models, config } = useLoaderData<typeof loader>();
   const [prompt, setPrompt] = useState("");
   const [enhance, setEnhance] = useState(false);
-  const [model, setModel] = useState("FLUX.1-Schnell-CF");
+  const [model, setModel] = useState(config.CUSTOMER_MODEL_MAP["FLUX.1-Schnell-CF"]);
   const [size, setSize] = useState("1024x1024");
   const [numSteps, setNumSteps] = useState(config.FLUX_NUM_STEPS);
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const isSubmitting = navigation.state === "submitting";
 
@@ -88,12 +87,12 @@ const GenerateImage: FC = () => {
   const handleReset = () => {
     setPrompt("");
     setEnhance(false);
-    setModel("FLUX.1-Schnell-CF");
+    setModel(config.CUSTOMER_MODEL_MAP["FLUX.1-Schnell-CF"]);
     setSize("1024x1024");
     setNumSteps(config.FLUX_NUM_STEPS);
   };
 
-  const handlePromptChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const handlePromptChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPrompt(e.target.value);
   };
 
@@ -122,14 +121,13 @@ const GenerateImage: FC = () => {
                 <label htmlFor="prompt" className="block text-white text-lg font-semibold mb-2">
                   输入提示词：
                 </label>
-                <textarea
+                <input
+                  type="text"
                   id="prompt"
                   name="prompt"
                   value={prompt}
                   onChange={handlePromptChange}
-                  ref={textareaRef}
-                  rows={6}
-                  className="w-full px-4 py-3 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 transition duration-300 ease-in-out hover:bg-opacity-30 resize-none"
+                  className="w-full px-4 py-3 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 transition duration-300 ease-in-out hover:bg-opacity-30"
                   placeholder="请输入您的提示词..."
                   required
                 />
@@ -157,7 +155,7 @@ const GenerateImage: FC = () => {
                 
                 <div>
                   <label htmlFor="size" className="block text-white text-lg font-semibold mb-2">
-                    图片比例：
+                    图片尺寸：
                   </label>
                   <select
                     id="size"
@@ -166,12 +164,9 @@ const GenerateImage: FC = () => {
                     onChange={(e) => setSize(e.target.value)}
                     className="w-full px-4 py-2 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white bg-opacity-20 text-white transition duration-300 ease-in-out hover:bg-opacity-30"
                   >
-                    <option value="1024x1024">1:1 (1024x1024)</option>
-                    <option value="512x1024">1:2 (512x1024)</option>
-                    <option value="768x512">3:2 (768x512)</option>
-                    <option value="768x1024">3:4 (768x1024)</option>
-                    <option value="1024x576">16:9 (1024x576)</option>
-                    <option value="576x1024">9:16 (576x1024)</option>
+                    <option value="512x512">512x512</option>
+                    <option value="768x768">768x768</option>
+                    <option value="1024x1024">1024x1024</option>
                   </select>
                 </div>
               </div>
@@ -197,8 +192,8 @@ const GenerateImage: FC = () => {
                 <button
                   type="button"
                   onClick={handleEnhanceToggle}
-                  className={`flex-1 px-4 py-3 rounded-xl text-lg font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-400
-                            ${enhance ? "bg-blue-500" : "bg-gray-500"}`}
+                  className={`flex-1 px-4 py-3 rounded-xl text-lg font-semibold text-white transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400
+                            ${enhance ? "bg-gradient-to-r from-green-400 to-green-600" : "bg-gradient-to-r from-gray-400 to-gray-600"}`}
                   disabled={isSubmitting}
                 >
                   {enhance ? "已强化提示词" : "强化提示词"}
@@ -208,7 +203,7 @@ const GenerateImage: FC = () => {
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="flex-1 px-4 py-3 rounded-xl text-lg font-semibold text-white bg-amber-500 transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  className="flex-1 px-4 py-3 rounded-xl text-lg font-semibold text-white bg-gradient-to-r from-yellow-400 to-yellow-600 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                   disabled={isSubmitting}
                 >
                   重置
@@ -216,8 +211,8 @@ const GenerateImage: FC = () => {
                 
                 <button
                   type="submit"
-                  className={`flex-1 px-4 py-3 rounded-xl text-lg font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-green-400
-                            ${isSubmitting ? "bg-gray-500 cursor-not-allowed" : "bg-green-500"}`}
+                  className={`flex-1 px-4 py-3 rounded-xl text-lg font-semibold text-white transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                            ${isSubmitting ? "bg-gray-500 cursor-not-allowed" : "bg-gradient-to-r from-indigo-500 to-indigo-700"}`}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "生成中..." : "生成图片"}
