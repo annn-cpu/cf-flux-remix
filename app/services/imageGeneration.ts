@@ -63,14 +63,6 @@ export class ImageGenerationService {
     }
   }
 
-  private async generateStandardImage(model: string, prompt: string, size: string, numSteps: number): Promise<string> {
-    const [width, height] = size.split('x').map(Number);
-    const jsonBody = { prompt, num_steps: numSteps, guidance: 7.5, strength: 1, width, height };
-    const response = await this.postRequest(model, jsonBody);
-    const imageBuffer = await response.arrayBuffer();
-    return this.arrayBufferToBase64(imageBuffer);
-  }
-
   private async generateFluxImage(model: string, prompt: string, numSteps: number): Promise<string> {
     const jsonBody = { prompt, num_steps: numSteps };
     const response = await this.postRequest(model, jsonBody);
@@ -122,5 +114,14 @@ export class ImageGenerationService {
     const testModel = this.config.CF_TRANSLATE_MODEL;
     const testPrompt = "Hello, world!";
     await this.postRequest(testModel, { messages: [{ role: "user", content: testPrompt }] });
+  }
+}
+
+private async generateStandardImage(model: string, prompt: string, size: string, numSteps: number): Promise<string> {
+    const [width, height] = size.split('x').map(Number);
+    const jsonBody = { prompt, num_steps: numSteps, guidance: 7.5, strength: 1, width, height };
+    const response = await this.postRequest(model, jsonBody);
+    const imageBuffer = await response.arrayBuffer();
+    return this.arrayBufferToBase64(imageBuffer);
   }
 }
